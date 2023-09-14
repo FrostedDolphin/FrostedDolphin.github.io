@@ -34,4 +34,4 @@ code area
 <mark>highlight</mark>
 
 how to do images
-![imagename](/FrostedDolphin.github.io/assets/img/71355557.png)
+![imagename](/assets/img/71355557.png)
