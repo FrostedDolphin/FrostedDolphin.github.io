@@ -33,5 +33,3 @@ code area
 
 <mark>highlight</mark>
 
-how to do images
-![imagename](/assets/img/71355557.png)
