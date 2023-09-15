@@ -12,7 +12,7 @@ Say you get a call on your work phone one day with someone on the line saying th
 
 Where does your investigation begin? Even if you had an EDR/AV solution on that host, there might not be any detections to go off of, you're completely on your own and feel overwhelmed. One might even say, "Lost in the sauce". This is where taking a foresnics perspective would come in handy. Introducing the category of forensic artifacts called **evidence of execution**. 
 
-## What is evidence of execution 
+## What is evidence of execution?
 
-Evidence of execution does exactly what's said in the name it gives us solid proof that cannot be disputed that a binary was in fact run on a host along with a timeline of when it was run on the host. 
+Evidence of execution does exactly what's said in the name. It gives us solid proof that cannot be disputed that a binary was in fact run on a host along with a timeline of when it was run on the host and how many times (up to a certain amount but we will cover this shortly). 
 
