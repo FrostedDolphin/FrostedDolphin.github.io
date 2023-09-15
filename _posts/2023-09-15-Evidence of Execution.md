@@ -4,9 +4,9 @@ author: Austin Moeller
 date: 2023-09-15
 categories: [Forensics, Evidence of execution]
 tags: [Forensics]
-pin: true
-math: true
-mermaid: true
+#pin: true
+#math: true
+#mermaid: true
 ---
 
 ## Introduction
