@@ -14,7 +14,7 @@ this is regular text
 code area 
 ```
 
-        two tabs over is another way to put in code 
+        tab over is another way to put in code 
 
 >this is a quote area
 
