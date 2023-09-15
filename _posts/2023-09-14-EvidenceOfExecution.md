@@ -2,7 +2,7 @@
 title: Going in Blind - Evidence of Execution
 author: austin
 date: 2023-09-15
-categories: [Forensics, Evidence of execution]
+categories: [Forensics, Evidence of Execution]
 tags: [Forensics]
 ---
 
