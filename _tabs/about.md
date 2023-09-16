@@ -13,8 +13,6 @@ My name is Austin and I am the farthest from a developer and hacker as one can g
 - I gave John Hammond a fist bump at DefCon31  
 - I'm always confused in this field and that's okay :)
 
-Practicionally, I work in a SOC and have many duties on top of its normal traditional triage functions including forensics/incident response, threat hunting, malware analysis, and a little bit of detection engineering and automation. This year I've been diving deep into Windows forensics and incident response, next year is a dedicated year towards red teaming and I'm hoping I can create some useful posts on here to: 
-1. Track my progress 
-2. Create content for you all to maybe grasp a topic a little better! 
+Practicionally, I work in a SOC and have many duties on top of its normal traditional triage functions including forensics/incident response, threat hunting, malware analysis, and a little bit of detection engineering and automation. This year, diving deep into Windows forensics and incident response has been a priority, next year is a dedicated year for me to gear more towards red teaming. The past couple years I've been including forensics in my work and filling my time with hacking/recon based CTFs has led me to lay out information to the community that has helped me do my job a little bit better and has made me grow in this industry. I hope you can find something useful! 
 
 Enjoy! 
