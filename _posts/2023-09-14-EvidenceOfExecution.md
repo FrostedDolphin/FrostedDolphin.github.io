@@ -36,7 +36,7 @@ Windows prefetch is a process where the operating system loads data and code fro
 Location: 
 `C:\Windows\Prefetch`
 
-Enabling prefetch: 
+Enabling prefetch
 
 Registry Key: `HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters`
 
@@ -48,7 +48,7 @@ Value: `1`
 
 ### Prefetch: Analysis
 
-The meta data inside of these files are informatin about the volume, files and directories used, and up to the lat 8 execution times. To parse this data out, PSCmd.exe is a popular tool from Eric Zimmerman. This tool can be used to parse out a single prefetch file, or a whole directory of them, and dumps it out in multiple formats. 
+The meta data inside of these files are information about the volume, files and directories used, and up to the last 8 execution times. To parse this data out, use PSCmd.exe, a popular tool from Eric Zimmerman. This tool can be used to parse out a single prefetch file, or a whole directory of them, and dumps it out in multiple formats. 
 
 > If all that's needed is a check to see the most recently executed applications, file created and file modified dates seen within the folder of prefetch files would do just fine. 
 {: .prompt-tip }
