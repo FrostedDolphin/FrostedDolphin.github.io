@@ -111,7 +111,7 @@ Files referenced: 43
 Below we can see the csv output when you run PECmd against an entire directory of prefetch files. There are two files that get created, the on labeled timeline is most interesting because we can not only see the prefetch file that were most interested in, but also all the other binaries that were run in proximity. This can give us clues to other lolbins (Live Off the Land Binaries) that are harder to detect malice from but easy to abuse. For example we might see a malicious setup file being run and be able to point out when it was run from its prefetch file, but until we pull this timeline, we might not know it had the capability of running wmic commands, or establishing persistence with reg.exe. This isn't the best picture of a timeline to showcase for malice but it give an example of what you would expect to see. 
 
 ![PECmd for a single prefetch file](/assets/img/PFdirectoryTimeline.png)
-_Output of PECmd.exe on a directory_
+_Output of PECmd.exe on a directory_ 
 
 
 Say you do come across a piece of malware that was run on the host, but it was deleted either due to user getting rid of it, the malware was self deleting, or it was scrubbed away with antivirus, it would be preferred to sandbox the malware and do additional research on it to help see what the binary does and be able to find more artifacts to aid in your response, or even to just make sure the device is clean of any other residue it may have left behind. Checking the recycle bin or AV quarantine location is a safe bet, but that's boring. What's more exciting is looking at the registry of course! 
