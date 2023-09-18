@@ -118,27 +118,27 @@ Say you do come across a piece of malware that was run on the host, but it was d
 
 ### Application Compatibility - ShimCache + AmCache: Introduction
 
-Generally speaking, application compatibility in Windows checks each executable and helps load other properties from a previous version of Windows for the application to run correctly. We're not interested in if a file is able to run correctly on a current version of Windows or not, what is interesting here is the fact that Windows having the audacity to scan every file in a directory whether if its being run or not with absolutely no consent. This is a prime example of Windows not only invading your privacy, but your files and folders privacy as well. This artifact will do a couple things for an examiner. 
+Generally speaking, application compatibility in Windows checks each executable and helps load other properties from a previous version of Windows for the application to run correctly. We're not interested in if a file is able to run correctly on a current version of Windows or not, what is interesting here is Windows having the audacity to scan every file in a directory whether if its being run or not with absolutely no consent. This is a prime example of Windows not only invading your privacy, but your files and folders privacy as well. This artifact will do a couple things for an examiner:
 
-1. If the malware was in a directory of other tools, those other tools maybe also scanned and place in the database here for us to view. 
+1. If the malware was in a directory of other tools, those other tools maybe also be scanned and placed in the database here for us to view. 
 2. Each executable comes with a SHA1 hash ;) 
 
 ### Application Compatibility - ShimCache + AmCache: Analysis
 
-Here's how to get extract this juicy information. First (make sure the rest of Eric Zimmermans tools are on the machine being investigated) run this on the live host
+Here's how to extract this juicy information. First, (make sure the rest of Eric Zimmermans tools are on the machine being investigated) run this command on the live host:
 
 ```
 > AppCompatCacheParser.exe --csv C:\temp 
 ```
 
-Next open the file that was just created and filter on any files or folders of interest. Example: if a piece of malware was dropped in a temp directory or in an interestingly named folder, filter on that folder name and you'll be getting some very nice information about other tools that might not have been run. 
+Next, open the file that was just created and filter on any files or folders of interest. Example: if a piece of malware was dropped in a temp directory or in an interestingly named folder, filter on that folder name and you'll be getting some nice information about other tools that might not have been run. 
 
 ![AppCompatCacheParser on a live machine](/assets/img/AppCompatParser.png)
 _Output of AppCompatCacheParser_
 
-Again nothing too exciting here to showcase since these are legitimate files, but could just as easily be stealthy malware, just use your imagination here and pretend C:\Windows\Temp is a directory filled with bad. 
+Again, nothing too exciting here to showcase since these are legitimate files, but could just as easily be stealthy malware, just use your imagination here and pretend C:\Windows\Temp is a directory filled with bad. 
 
-Next run amcacheparser which will parse the amcache hive and place the results in multiple folders. The files with the information needed to get the file hashes are `Amcache_UnassociatedEntries`, `Amcache_DriveBinaries`, and `Amcache_ProgramEntries`. The parser here will categorize the files based on its attributes, therefore the binary(ies) you're interested in may be in any one of these csv files. just have to open them up and look :)
+Next, run amcacheparser which will parse the amcache hive and place the results in multiple folders. The files with the information needed to get the file hashes are `Amcache_UnassociatedEntries`, `Amcache_DriveBinaries`, and `Amcache_ProgramEntries`. The parser here will categorize the files based on its attributes, therefore the binary(ies) you're interested in may be in any one of these csv files. Just have to open them up and look :)
 
 ```
 > amcacheparser.exe -i -f C:\Windows\AppCompat\Programs\Amcache.hve --csv C:\temp
