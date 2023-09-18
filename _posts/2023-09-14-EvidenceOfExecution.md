@@ -149,7 +149,7 @@ _Output of AmCacheParser_
 
 All that's left is finding a database to search for your sample's hash, download it, and now it's yours to sandbox! My favorite are VirusTotal and VirusShare.
 
-Thanks for reading, here's some resources and references: 
+Thanks for reading, here's some resources and references:
 
 ## Refences & Resources
 
