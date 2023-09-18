@@ -123,6 +123,8 @@ Generally speaking, application compatibility in Windows checks each executable 
 1. If the malware was in a directory of other tools, those other tools maybe also scanned and place in the database here for us to view. 
 2. Each executable comes with a SHA1 hash ;) 
 
+### Application Compatibility - ShimCache + AmCache: Analysis
+
 Here's how to get extract this juicy information. First (make sure the rest of Eric Zimmermans tools are on the machine being investigated) run this on the live host
 
 ```
