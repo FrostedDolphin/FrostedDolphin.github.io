@@ -114,7 +114,7 @@ Below we can see the csv output when you run PECmd against an entire directory o
 _Output of PECmd.exe on a directory_
 
 
-Say you do come across a piece of malware that was run on the host, but it was deleted either due to user getting rid of it, the malware was self deleting, or it was scrubbed away with antivirus, it would be preferred to sandbox the malware and do additional research on it to help see what does and be able to find more artifacts to aid in your response, or even to just make sure the device is clean of any residue it may have left behind. Checking the recycle bin or AV quarantine location is a safe bet, but that's boring. What's more exciting is looking at the registry of course! 
+Say you do come across a piece of malware that was run on the host, but it was deleted either due to user getting rid of it, the malware was self deleting, or it was scrubbed away with antivirus, it would be preferred to sandbox the malware and do additional research on it to help see what the binary does and be able to find more artifacts to aid in your response, or even to just make sure the device is clean of any other residue it may have left behind. Checking the recycle bin or AV quarantine location is a safe bet, but that's boring. What's more exciting is looking at the registry of course! 
 
 ### Application Compatibility - ShimCache + AmCache: Introduction
 
