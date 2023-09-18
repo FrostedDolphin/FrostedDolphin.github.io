@@ -1,7 +1,7 @@
 ---
 title: Going in Blind - Evidence of Execution
 author: austin
-date: 2023-09-15
+date: 2023-09-17
 categories: [Forensics, Evidence of Execution]
 tags: [Forensics]
 ---
@@ -14,7 +14,7 @@ Where does your investigation begin? Even if you had an EDR/AV solution on that 
 
 ## What is evidence of execution?
 
-Evidence of execution does exactly what's said in the name. It gives us solid proof that cannot be disputed that a binary was in fact run on a host along with a timeline of when it was run on the host and how many times (up to a certain amount but this will be covered shortly) it was run. 
+Evidence of execution is exactly what it's name suggests. It gives us solid proof that cannot be disputed that a binary was in fact run on a host along with a timeline of when it was run on the host and how many times (up to a certain amount but this will be covered shortly) it was run. 
 
 ### Prefetch: Introduction
 Usually one of the first places I look when starting a blind investigation is in the Windows prefetch folder, this gives a list of all executable names that were run on the host. But what exactly is a prefetch file and why is it useful? 
@@ -48,7 +48,7 @@ Value: `1`
 
 ### Prefetch: Analysis
 
-The meta data inside of these files are information about the volume, files and directories used, and up to the last 8 execution times. To parse this data out, use PSCmd.exe, a popular tool from Eric Zimmerman. This tool can be used to parse out a single prefetch file, or a whole directory of them, and dumps it out in multiple formats. 
+The meta data inside of these files are information about the volume, files and directories used, and up to the last 8 execution times. To parse this data out, use PSCmd.exe, a popular tool from Eric Zimmerman. This tool can be used to parse out a single prefetch file, or a whole directory of them. 
 
 > If all that's needed is a check to see the most recently executed applications, file created and file modified dates seen within the folder of prefetch files would do just fine. 
 {: .prompt-tip }
@@ -59,9 +59,102 @@ An example of usage for PECmd.exe:
 > PECmd.exe -d C:\Windows\Prefetch --csv C:\temp\casefiles -q 
 ```
 
-> picture of single file analysis. 
-explanation of file locations on directories referenced 
+This is what running PECmd on a single prefetch file would look like, notice the file and directories referenced section, this is everything that this exe touched within the first ten second of it running (remember when it was mentioned above that prefetch files don't get created until after 10 seconds of the file being run). From a malware analysis perspective, you might be able to use these sections to find some other IOCs to aid in your search. 
 
-> picture of folder anlaysis.
-explanation of timeline analysis and drawning out what exes were executed around the same time 
+```
+PECmd version 1.5.0.0
 
+Author: Eric Zimmerman (saericzimmerman@gmail.com)
+https://github.com/EricZimmerman/PECmd
+
+Command line: -f .\SETUP.EXE-BC6B5435.pf
+
+Keywords: temp, tmp
+
+Processing .\SETUP.EXE-BC6B5435.pf
+
+Created on: 2022-08-13 17:31:26
+Modified on: 2022-08-13 17:31:36
+Last accessed on: 2023-09-18 04:01:00
+
+Executable name: SETUP.EXE
+Hash: BC6B5435
+File size (bytes): 29,846
+Version: Windows 10 or Windows 11
+
+Run count: 3
+Last run: 2022-08-13 17:31:26
+Other run times: 2022-08-13 17:31:26, 2022-08-13 17:31:26
+
+Volume information:
+
+#0: Name: \VOLUME{01d8559f7371205e-b0737add} Serial: B0737ADD Created: 2022-04-21 16:47:13 Directories: 10 File references: 40
+
+Directories referenced: 10
+
+00: \VOLUME{01d8559f7371205e-b0737add}\PROGRAM FILES (X86)
+01: \VOLUME{01d8559f7371205e-b0737add}\PROGRAM FILES (X86)\MICROSOFT
+02: \VOLUME{01d8559f7371205e-b0737add}\PROGRAM FILES (X86)\MICROSOFT\EDGE
+...
+09: \VOLUME{01d8559f7371205e-b0737add}\WINDOWS\SYSTEM32
+
+Files referenced: 43
+
+00: \VOLUME{01d8559f7371205e-b0737add}\WINDOWS\SYSTEM32\NTDLL.DLL
+01: \VOLUME{01d8559f7371205e-b0737add}\PROGRAM FILES (X86)\MICROSOFT\EDGE\APPLICATION\104.0.1293.54\INSTALLER\SETUP.EXE (Executable: True)
+02: \VOLUME{01d8559f7371205e-b0737add}\WINDOWS\SYSTEM32\KERNEL32.DLL
+03: \VOLUME{01d8559f7371205e-b0737add}\WINDOWS\SYSTEM32\KERNELBASE.DLL
+...
+```
+
+
+Below we can see the csv output when you run PECmd against an entire directory of prefetch files. There are two files that get created, the on labeled timeline is most interesting because we can not only see the prefetch file that were most interested in, but also all the other binaries that were run in proximity. This can give us clues to other lolbins (Live Off the Land Binaries) that are harder to detect malice from but easy to abuse. For example we might see a malicious setup file being run and be able to point out when it was run from its prefetch file, but until we pull this timeline, we might not know it had the capability of running wmic commands, or establishing persistence with reg.exe. This isn't the best picture of a timeline to showcase for malice but it give an example of what you would expect to see. 
+
+![PECmd for a single prefetch file](/assets/img/PFdirtimeline.png)
+_Output of PECmd.exe on a directory_
+
+
+Say you do come across a piece of malware that was run on the host, but it was deleted either due to user getting rid of it, the malware was self deleting, or it was scrubbed away with antivirus, it would be preferred to sandbox the malware and do additional research on it to help see what does and be able to find more artifacts to aid in your response, or even to just make sure the device is clean of any residue it may have left behind. Checking the recycle bin or AV quarantine location is a safe bet, but that's boring. What's more exciting is looking at the registry of course! 
+
+### Application Compatibility - ShimCache + AmCache: Introduction
+
+Generally speaking, application compatibility in Windows checks each executable and helps load other properties from a previous version of Windows for the application to run correctly. We're not interested in if a file is able to run correctly on a current version of Windows or not, what is interesting here is the fact that Windows having the audacity to scan every file in a directory whether if its being run or not with absolutely no consent. This is a prime example of Windows not only invading your privacy, but your files and folders privacy as well. This artifact will do a couple things for an examiner. 
+
+1. If the malware was in a directory of other tools, those other tools maybe also scanned and place in the database here for us to view. 
+2. Each executable comes with a SHA1 hash ;) 
+
+Here's how to get extract this juicy information. First (make sure the rest of Eric Zimmermans tools are on the machine being investigated) run this on the live host
+
+```
+> AppCompatCacheParser.exe --csv C:\temp 
+```
+
+Next open the file that was just created and filter on any files or folders of interest. Example: if a piece of malware was dropped in a temp directory or in an interestingly named folder, filter on that folder name and you'll be getting some very nice information about other tools that might not have been run. 
+
+![AppCompatCacheParser on a live machine](/assets/img/AppCompatParser.png)
+_Output of AppCompatCacheParser_
+
+Again nothing too exciting here to showcase since these are legitimate files, but could just as easily be stealthy malware, just use your imagination here and pretend C:\Windows\Temp is a directory filled with bad. 
+
+Next run amcacheparser which will parse the amcache hive and place the results in multiple folders. The files with the information needed to get the file hashes are `Amcache_UnassociatedEntries`, `Amcache_DriveBinaries`, and `Amcache_ProgramEntries`. The parser here will categorize the files based on its attributes, therefore the binary(ies) you're interested in may be in any one of these csv files. just have to open them up and look :)
+
+```
+> amcacheparser.exe -i -f C:\Windows\AppCompat\Programs\Amcache.hve --csv C:\temp
+```
+
+Now check the above mentioned files for your artifacts and collect your iocs! 
+
+![AMCache on a live machine](/assets/img/AMCache.png)
+_Output of AmCacheParser_
+
+All that's left is finding a database to search for your sample's hash, download it, and now it's yours to sandbox! My favorite are VirusTotal and VirusShare.
+
+Thanks for reading, here's some resources and references: 
+
+## Refences & Resources
+
+> [**forensafe - AmCache**](https://forensafe.com/blogs/AmCache.html)
+
+> [**andreafortuna - AmCache / ShimCache**](https://forensafe.com/blogs/AmCache.html)
+
+> [**Magnet - Prefetch**](https://forensafe.com/blogs/AmCache.html)
