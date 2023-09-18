@@ -110,7 +110,7 @@ Files referenced: 43
 
 Below we can see the csv output when you run PECmd against an entire directory of prefetch files. There are two files that get created, the on labeled timeline is most interesting because we can not only see the prefetch file that were most interested in, but also all the other binaries that were run in proximity. This can give us clues to other lolbins (Live Off the Land Binaries) that are harder to detect malice from but easy to abuse. For example we might see a malicious setup file being run and be able to point out when it was run from its prefetch file, but until we pull this timeline, we might not know it had the capability of running wmic commands, or establishing persistence with reg.exe. This isn't the best picture of a timeline to showcase for malice but it give an example of what you would expect to see. 
 
-![PECmd for a single prefetch file](/assets/img/PFdirectoryTimeline.png)
+![PECmd for a single prefetch file](/assets/img/PFdirectoryTimeline.png) 
 _Output of PECmd.exe on a directory_ 
 
 
