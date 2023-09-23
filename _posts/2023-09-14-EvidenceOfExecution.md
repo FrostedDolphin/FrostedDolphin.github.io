@@ -8,18 +8,18 @@ tags: [Forensics]
 
 ## Introduction
 
-You get a call from your parents one day saying they think their laptop or computer was hacked. Immediately you might being sighing or rolling your eyes as you get dried out being the only free tech support person in your friends/family circle. With how uncommon these types of events are (yeah, right?), you may be thinking this was probably some sort of tech scammer or other type of unauthorized remote access event. You could conduct a "user interview" which would give more context into the situation, like what they were doing before they called or if they saw any pop-ups etc, but that involves extending the conversation even further, risking your sanity.. The hero you are cuts them short and tells them you'll handle it. 
+You get a call from your parents one day saying they think their laptop or computer was hacked. Immediately you might be sighing or rolling your eyes as you get dried out being the only free tech support person in your friends/family circle. With how uncommon these types of events are (yeah, right?), you may be thinking this was probably some sort of tech scammer or other type of unauthorized remote access event. You could conduct a "user interview" which would give more context into the situation, like what they were doing before they called or if they saw any pop-ups etc, but that involves extending the conversation even further, risking your sanity.. The hero you are cuts them short and tells them you'll handle it. 
 
 Where does your investigation begin? Even if you had an EDR/AV solution on that host, there might not be any detections to go off of, you're completely on your own and feel overwhelmed. One might even say, "Lost in the sauce". This is where taking a forensics perspective would come in handy. Introducing the category of forensic artifacts called **evidence of execution**. 
 
 ## What is evidence of execution?
 
-Evidence of execution is exactly what it's name suggests. It gives us solid proof that cannot be disputed that a binary was in fact run on a host along with a timeline of when it was run on the host and how many times (up to a certain amount but this will be covered shortly) it was run. 
+Evidence of execution is exactly what its name suggests. It gives us solid proof that cannot be disputed that a binary was in fact run on a host along with a timeline of when it was run on the host and how many times (up to a certain amount but this will be covered shortly) it was run. 
 
 ### Prefetch: Introduction
 Usually one of the first places I look when starting a blind investigation is in the Windows prefetch folder, this gives a list of all executable names that were run on the host. But what exactly is a prefetch file and why is it useful? 
 
-Windows prefetch is a process where the operating system loads data and code from disk to memory before its needed, this speeds up the application load time. The cache manager will monitor information about what running in each application and use it when that application starts up again. (think of an application crashing on you and when it restarts, you pick up where you left off before the crash). Some of these cache files are in the form of a prefetch file with a .pf extension. If configured correctly in Windows, there will be a cache file for every application you run (just one of the many ways Windows tracks your every move). Prefetch files are also known as a shell item, this means that there is enough information stored in this artifact to give us more than just a birds eye view of what is being run on a host. Shell items record not only timestamps and executable names, but also the file size and Master File Table (MFT) information on the original file and folder in the path if it was renamed or moved.
+Windows prefetch is a process where the operating system loads data and code from disk to memory before it's needed, this speeds up the application load time. The cache manager will monitor information about what's running in each application and use it when that application starts up again. (Think of an application crashing on you and when it restarts, you pick up where you left off before the crash). Some of these cache files are in the form of a prefetch file with a .pf extension. If configured correctly in Windows, there will be a cache file for every application you run (just one of the many ways Windows tracks your every move). Prefetch files are also known as a shell item, this means that there is enough information stored in this artifact to give us more than just a birds eye view of what is being run on a host. Shell items record not only timestamps and executable names, but also the file size and Master File Table (MFT) information on the original file and folder in the path if it was renamed or moved.
 
  There are some things to keep in mind about prefetch as you're sifting through the data. 
 - Windows 7 Pefetch files only stores 1 run time 
@@ -48,7 +48,7 @@ Value: `1`
 
 ### Prefetch: Analysis
 
-The meta data inside of these files are information about the volume, files and directories used, and up to the last 8 execution times. To parse this data out, use PSCmd.exe, a popular tool from Eric Zimmerman. This tool can be used to parse out a single prefetch file, or a whole directory of them. 
+The metadata inside of these files are information about the volume, files and directories used, and up to the last 8 execution times. To parse this data out, use PECmd.exe, a popular tool from Eric Zimmerman. This tool can be used to parse out a single prefetch file, or a whole directory of them. 
 
 > If all that's needed is a check to see the most recently executed applications, file created and file modified dates seen within the folder of prefetch files would do just fine. 
 {: .prompt-tip }
@@ -108,7 +108,7 @@ Files referenced: 43
 ```
 
 
-Below we can see the csv output when you run PECmd against an entire directory of prefetch files. There are two files that get created, the on labeled timeline is most interesting because we can not only see the prefetch file that were most interested in, but also all the other binaries that were run in proximity. This can give us clues to other lolbins (Live Off the Land Binaries) that are harder to detect malice from but easy to abuse. For example we might see a malicious setup file being run and be able to point out when it was run from its prefetch file, but until we pull this timeline, we might not know it had the capability of running wmic commands, or establishing persistence with reg.exe. This isn't the best picture of a timeline to showcase for malice but it gives an example of what you would expect to see. 
+Below we can see the csv output when you run PECmd against an entire directory of prefetch files. There are two files that get created, the file labeled timeline is most interesting because we can not only see the prefetch file that we're most interested in, but also all the other binaries that were run in proximity. This can give us clues to other lolbins (Live Off the Land Binaries) that are harder to detect malice from but easy to abuse. For example, we might see a malicious setup file being run and be able to point out when it was run from its prefetch file. Until this timeline was pulled, we might not have known it had the capability of running wmic commands, or establishing persistence with reg.exe. This isn't the best picture of a timeline to showcase for malice but it gives an example of what you would expect to see. 
 
 ![PECmd for a single prefetch file](/assets/img/PFdir.png) 
 _Output of PECmd.exe on a directory_ 
